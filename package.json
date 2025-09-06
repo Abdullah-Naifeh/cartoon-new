@@ -1,0 +1,74 @@
+{
+  "name": "my-app",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "pages:build": "npx @cloudflare/next-on-pages"
+  },
+  "proxy": "https://cartoonz.top",
+  "dependencies": {
+    "@emailjs/browser": "^4.4.1",
+    "@faker-js/faker": "^10.0.0",
+    "@hookform/resolvers": "^3.4.2",
+    "@libsql/client": "^0.6.2",
+    "@paypal/paypal-js": "^8.1.2",
+    "@prisma/client": "^6.15.0",
+    "@radix-ui/react-slot": "^1.1.2",
+    "@radix-ui/react-tooltip": "^1.1.8",
+    "@stripe/react-stripe-js": "^2.8.1",
+    "@stripe/stripe-js": "^4.9.0",
+    "@supabase/supabase-js": "^2.45.0",
+    "@videojs/themes": "^1.0.1",
+    "axios": "^1.7.7",
+    "bcrypt": "^5.1.1",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "firebase": "^11.0.2",
+    "framer-motion": "^12.5.0",
+    "keen-slider": "^6.8.6",
+    "lucide-react": "^0.483.0",
+    "next": "^14.2.15",
+    "next-auth": "^4.24.10",
+    "next-cloudinary": "^6.6.0",
+    "next-pwa": "^5.6.0",
+    "node-cache": "^5.1.2",
+    "papaparse": "^5.4.1",
+    "puppeteer": "^23.9.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-hook-form": "^7.51.5",
+    "react-hot-toast": "^2.4.1",
+    "react-icons": "^5.2.1",
+    "stripe": "^17.3.1",
+    "tailwind-merge": "^3.0.2",
+    "tailwindcss": "^3.4.16",
+    "uuid": "^10.0.0",
+    "video.js": "^8.18.1",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/react": "19.0.1",
+    "eslint": "^8",
+    "eslint-config-next": "^14.2.15"
+  },
+  "description": "This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).",
+  "main": "next.config.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/waelkamira/cartoon.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/waelkamira/cartoon/issues"
+  },
+  "homepage": "https://github.com/waelkamira/cartoon#readme"
+}

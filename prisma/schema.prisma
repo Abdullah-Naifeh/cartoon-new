@@ -1,0 +1,502 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  USER
+  ADMIN
+  CONTENT_CREATOR
+}
+
+enum SubscriptionType {
+  FREE
+  MONTHLY
+  YEARLY
+  LIFETIME
+}
+
+enum ContentType {
+  SERIES
+  MOVIE
+  SONG
+  EPISODE
+}
+
+enum Language {
+  ARABIC
+  ENGLISH
+  TURKISH
+}
+
+enum ContentCategory {
+  SPACE_TOON
+  REGULAR
+}
+
+model User {
+  id                String            @id @default(cuid())
+  email             String            @unique
+  name              String?
+  password          String
+  role              UserRole          @default(USER)
+  subscriptionType  SubscriptionType  @default(FREE)
+  monthlySubscription Boolean         @default(false) @map("monthly_subscription")
+  yearlySubscription Boolean          @default(false) @map("yearly_subscription")
+  subscriptionStart DateTime?
+  subscriptionEnd   DateTime?
+  createdAt         DateTime          @default(now()) @map("created_at")
+  updatedAt         DateTime          @updatedAt @map("updated_at")
+  isActive          Boolean           @default(true)
+  avatar            String?
+
+  // العلاقات مع المحتوى
+  arabicSeries      ArabicSeries[]    @relation("UserArabicSeries")
+  englishSeries     EnglishSeries[]   @relation("UserEnglishSeries")
+  turkishSeries     TurkishSeries[]   @relation("UserTurkishSeries")
+  arabicMovies      ArabicMovie[]     @relation("UserArabicMovies")
+  englishMovies     EnglishMovie[]    @relation("UserEnglishMovies")
+  turkishMovies     TurkishMovie[]    @relation("UserTurkishMovies")
+  arabicSongs       ArabicSong[]      @relation("UserArabicSongs")
+  spaceToonSongs    SpaceToonSong[]   @relation("UserSpaceToonSongs")
+  englishSongs      EnglishSong[]     @relation("UserEnglishSongs")
+  turkishSongs      TurkishSong[]     @relation("UserTurkishSongs")
+  baseMedia         BaseMedia[]
+  arabicEpisodes    ArabicEpisode[]   @relation("UserArabicEpisodes")
+  englishEpisodes   EnglishEpisode[]  @relation("UserEnglishEpisodes")
+  turkishEpisodes   TurkishEpisode[]  @relation("UserTurkishEpisodes")
+  
+  @@map("users")
+}
+
+// نموذج أساسي للحقول المشتركة
+model BaseMedia {
+  id           String   @id @default(cuid())
+  title        String
+  description  String?
+  imageUrl     String?
+  duration     String?
+  genre        String?
+  releaseDate  DateTime?
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+  planetName   String?
+  mostViewed   Boolean  @default(false) @map("most_viewed")
+  oldCartoon   Boolean  @default(false) @map("old_cartoon")
+  subscribed   Boolean  @default(false) @map("subscripted")
+  viewsCount   Int      @default(0) @map("views_count")
+  rating       Float?   @default(0.0)
+  isActive     Boolean  @default(true)
+
+  // العلاقة مع المستخدم
+  userId       String?
+  user         User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// المسلسلات العربية
+model ArabicSeries {
+  id           String   @id @default(cuid())
+  title        String
+  description  String?
+  imageUrl     String?
+  language     String?  @default("ar")
+  episodes     Int      @default(1)
+  season       Int      @default(1)
+  genre        String?
+  releaseDate  DateTime?
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+  planetName   String?
+  mostViewed   Boolean  @default(false) @map("most_viewed")
+  oldCartoon   Boolean  @default(false) @map("old_cartoon")
+  subscribed   Boolean  @default(false) @map("subscripted")
+  viewsCount   Int      @default(0) @map("views_count")
+  rating       Float?   @default(0.0)
+  director     String?
+  actors       String?
+  production   String?
+
+  userId       String?
+  user         User?    @relation("UserArabicSeries", fields: [userId], references: [id], onDelete: Cascade)
+  
+  // العلاقة مع الحلقات العربية
+  arabicEpisodes ArabicEpisode[] @relation("SeriesArabicEpisodes")
+  
+  @@map("arabic_series")
+}
+
+// الحلقات العربية
+model ArabicEpisode {
+  id           String         @id @default(cuid())
+  episode      String
+  seriesName   String
+  description  String?
+  imageUrl     String?
+  planetName   String?
+  language     String?  @default("ar")
+  duration     String?
+  episodeNumber Int           @map("episode_number")
+  seasonNumber Int           @default(1) @map("season_number")
+  releaseDate  DateTime?
+  createdAt    DateTime      @default(now()) @map("created_at")
+  updatedAt    DateTime      @updatedAt @map("updated_at")
+  viewsCount   Int           @default(0) @map("views_count")
+  rating       Float?        @default(0.0)
+  videoUrl     String        @map("video_url")
+  subtitlesUrl String?       @map("subtitles_url")
+  isFree       Boolean       @default(false) @map("is_free")
+  
+  // العلاقة مع المسلسل العربي
+  seriesId     String?
+  series       ArabicSeries? @relation("SeriesArabicEpisodes", fields: [seriesId], references: [id], onDelete: Cascade)
+  
+  // العلاقة مع المستخدم
+  userId       String?
+  user         User?         @relation("UserArabicEpisodes", fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@index([seriesId])
+  @@index([userId])
+  @@map("arabic_episodes")
+}
+
+// الأفلام العربية
+model ArabicMovie {
+  id           String   @id @default(cuid())
+  title        String
+  description  String?
+  imageUrl     String?
+  planetName   String?
+  language     String?  @default("ar")
+  duration     String?
+  genre        String?
+  releaseDate  DateTime?
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+  mostViewed   Boolean  @default(false) @map("most_viewed")
+  oldCartoon   Boolean  @default(false) @map("old_cartoon")
+  subscribed   Boolean  @default(false) @map("subscripted")
+  viewsCount   Int      @default(0) @map("views_count")
+  rating       Float?   @default(0.0)
+  director     String?
+  actors       String?
+  production   String?
+  videoUrl     String?  @map("video_url")
+  subtitlesUrl String?  @map("subtitles_url")
+
+  userId       String?
+  user         User?    @relation("UserArabicMovies", fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@map("arabic_movies")
+}
+
+// الأغاني العربية
+model ArabicSong {
+  id           String   @id @default(cuid())
+  title        String
+  description  String?
+  imageUrl     String?
+  planetName   String?
+  language     String?  @default("ar")
+  duration     String?
+  genre        String?
+  releaseDate  DateTime?
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+  mostViewed   Boolean  @default(false) @map("most_viewed")
+  subscribed   Boolean  @default(false) @map("subscripted")
+  viewsCount   Int      @default(0) @map("views_count")
+  rating       Float?   @default(0.0)
+  artist       String?
+  album        String?
+  lyrics       String?
+  audioUrl     String?  @map("audio_url")
+
+  userId       String?
+  user         User?    @relation("UserArabicSongs", fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@map("arabic_songs")
+}
+
+// المسلسلات الإنجليزية
+model EnglishSeries {
+  id           String   @id @default(cuid())
+  title        String
+  description  String?
+  imageUrl     String?
+  language     String?  @default("en")
+  episodes     Int      @default(1)
+  season       Int      @default(1)
+  genre        String?
+  releaseDate  DateTime?
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+  planetName   String?
+  mostViewed   Boolean  @default(false) @map("most_viewed")
+  oldCartoon   Boolean  @default(false) @map("old_cartoon")
+  subscribed   Boolean  @default(false) @map("subscripted")
+  viewsCount   Int      @default(0) @map("views_count")
+  rating       Float?   @default(0.0)
+  network      String?
+  imdbRating   Float?   @map("imdb_rating")
+
+  userId       String?
+  user         User?    @relation("UserEnglishSeries", fields: [userId], references: [id], onDelete: Cascade)
+  
+  // العلاقة مع الحلقات الإنجليزية
+  englishEpisodes EnglishEpisode[] @relation("SeriesEnglishEpisodes")
+  
+  @@map("english_series")
+}
+
+// الحلقات الإنجليزية
+model EnglishEpisode {
+  id           String          @id @default(cuid())
+  episode      String
+  seriesName   String
+  description  String?
+  imageUrl     String?
+  planetName   String?
+  language     String?  @default("en")
+  duration     String?
+  episodeNumber Int            @map("episode_number")
+  seasonNumber Int            @default(1) @map("season_number")
+  releaseDate  DateTime?
+  createdAt    DateTime       @default(now()) @map("created_at")
+  updatedAt    DateTime       @updatedAt @map("updated_at")
+  viewsCount   Int            @default(0) @map("views_count")
+  rating       Float?         @default(0.0)
+  videoUrl     String         @map("video_url")
+  subtitlesUrl String?        @map("subtitles_url")
+  isFree       Boolean        @default(false) @map("is_free")
+  
+  // العلاقة مع المسلسل الإنجليزي
+  seriesId     String?
+  series       EnglishSeries? @relation("SeriesEnglishEpisodes", fields: [seriesId], references: [id], onDelete: Cascade)
+  
+  // العلاقة مع المستخدم
+  userId       String?
+  user         User?          @relation("UserEnglishEpisodes", fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@index([seriesId])
+  @@index([userId])
+  @@map("english_episodes")
+}
+
+// الأفلام الإنجليزية
+model EnglishMovie {
+  id           String   @id @default(cuid())
+  title        String
+  description  String?
+  imageUrl     String?
+  planetName   String?
+  language     String?  @default("en")
+  duration     String?
+  genre        String?
+  releaseDate  DateTime?
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+  mostViewed   Boolean  @default(false) @map("most_viewed")
+  oldCartoon   Boolean  @default(false) @map("old_cartoon")
+  subscribed   Boolean  @default(false) @map("subscripted")
+  viewsCount   Int      @default(0) @map("views_count")
+  rating       Float?   @default(0.0)
+  director     String?
+  imdbRating   Float?   @map("imdb_rating")
+  budget       String?
+  videoUrl     String?  @map("video_url")
+  subtitlesUrl String?  @map("subtitles_url")
+
+  userId       String?
+  user         User?    @relation("UserEnglishMovies", fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@map("english_movies")
+}
+
+// الأغاني الإنجليزية
+model EnglishSong {
+  id           String   @id @default(cuid())
+  title        String
+  description  String?
+  imageUrl     String?
+  planetName   String?
+  language     String?  @default("en")
+  duration     String?
+  genre        String?
+  releaseDate  DateTime?
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+  mostViewed   Boolean  @default(false) @map("most_viewed")
+  subscribed   Boolean  @default(false) @map("subscripted")
+  viewsCount   Int      @default(0) @map("views_count")
+  rating       Float?   @default(0.0)
+  artist       String?
+  album        String?
+  spotifyLink  String?  @map("spotify_link")
+  audioUrl     String?  @map("audio_url")
+
+  userId       String?
+  user         User?    @relation("UserEnglishSongs", fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@map("english_songs")
+}
+
+// المسلسلات التركية
+model TurkishSeries {
+  id           String   @id @default(cuid())
+  title        String
+  description  String?
+  imageUrl     String?
+  language     String?  @default("tr")
+
+  episodes     Int      @default(1)
+  season       Int      @default(1)
+  genre        String?
+  releaseDate  DateTime?
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+  planetName   String?
+  mostViewed   Boolean  @default(false) @map("most_viewed")
+  oldCartoon   Boolean  @default(false) @map("old_cartoon")
+  subscribed   Boolean  @default(false) @map("subscripted")
+  viewsCount   Int      @default(0) @map("views_count")
+  rating       Float?   @default(0.0)
+  channel      String?
+  totalSeasons Int?     @map("total_seasons")
+
+  userId       String?
+  user         User?    @relation("UserTurkishSeries", fields: [userId], references: [id], onDelete: Cascade)
+  
+  // العلاقة مع الحلقات التركية
+  turkishEpisodes TurkishEpisode[] @relation("SeriesTurkishEpisodes")
+  
+  @@map("turkish_series")
+}
+
+// الحلقات التركية
+model TurkishEpisode {
+  id           String          @id @default(cuid())
+  episode      String
+  seriesName   String
+  description  String?
+  imageUrl     String?
+  planetName   String?
+  language     String?  @default("tr")
+  duration     String?
+  episodeNumber Int            @map("episode_number")
+  seasonNumber Int            @default(1) @map("season_number")
+  releaseDate  DateTime?
+  createdAt    DateTime       @default(now()) @map("created_at")
+  updatedAt    DateTime       @updatedAt @map("updated_at")
+  viewsCount   Int            @default(0) @map("views_count")
+  rating       Float?         @default(0.0)
+  videoUrl     String         @map("video_url")
+  subtitlesUrl String?        @map("subtitles_url")
+  isFree       Boolean        @default(false) @map("is_free")
+  
+  // العلاقة مع المسلسل التركي
+  seriesId     String?
+  series       TurkishSeries? @relation("SeriesTurkishEpisodes", fields: [seriesId], references: [id], onDelete: Cascade)
+  
+  // العلاقة مع المستخدم
+  userId       String?
+  user         User?          @relation("UserTurkishEpisodes", fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@index([seriesId])
+  @@index([userId])
+  @@map("turkish_episodes")
+}
+
+// الأفلام التركية
+model TurkishMovie {
+  id           String   @id @default(cuid())
+  title        String
+  description  String?
+  imageUrl     String?
+  planetName   String?
+  language     String?  @default("tr")
+  duration     String?
+  genre        String?
+  releaseDate  DateTime?
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+  mostViewed   Boolean  @default(false) @map("most_viewed")
+  oldCartoon   Boolean  @default(false) @map("old_cartoon")
+  subscribed   Boolean  @default(false) @map("subscripted")
+  viewsCount   Int      @default(0) @map("views_count")
+  rating       Float?   @default(0.0)
+  director     String?
+  awards       String?
+  videoUrl     String?  @map("video_url")
+  subtitlesUrl String?  @map("subtitles_url")
+
+  userId       String?
+  user         User?    @relation("UserTurkishMovies", fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@map("turkish_movies")
+}
+
+// الأغاني التركية
+model TurkishSong {
+  id           String   @id @default(cuid())
+  title        String
+  description  String?
+  imageUrl     String?
+  language     String?  @default("tr")
+  duration     String?
+  genre        String?
+  releaseDate  DateTime?
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+  planetName   String?
+  mostViewed   Boolean  @default(false) @map("most_viewed")
+  subscribed   Boolean  @default(false) @map("subscripted")
+  viewsCount   Int      @default(0) @map("views_count")
+  rating       Float?   @default(0.0)
+  artist       String?
+  album        String?
+  isTraditional Boolean @default(false) @map("is_traditional")
+  audioUrl     String?  @map("audio_url")
+
+  userId       String?
+  user         User?    @relation("UserTurkishSongs", fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@map("turkish_songs")
+}
+
+
+
+
+
+
+// أغاني سبيس تون
+model SpaceToonSong {
+  id           String   @id @default(cuid())
+  title        String
+  description  String?
+  imageUrl     String?
+  planetName   String?
+  duration     String?
+  genre        String?
+  releaseDate  DateTime?
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+  mostViewed   Boolean  @default(false) @map("most_viewed")
+  subscribed   Boolean  @default(false) @map("subscripted")
+  viewsCount   Int      @default(0) @map("views_count")
+  rating       Float?   @default(0.0)
+  artist       String?
+  cartoon      String?
+  isOriginal   Boolean  @default(true) @map("is_original")
+  audioUrl     String?  @map("audio_url")
+
+  userId       String?
+  user         User?    @relation("UserSpaceToonSongs", fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@map("space_toon_songs")
+}
+
+

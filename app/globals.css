@@ -1,0 +1,294 @@
+/* @tailwind base;
+@tailwind components;
+@tailwind utilities; */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: 0 0% 100%;
+  --foreground: 240 10% 3.9%;
+  --card: 0 0% 100%;
+  --card-foreground: 240 10% 3.9%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 240 10% 3.9%;
+  --primary: 270 95% 65%;
+  --primary-foreground: 0 0% 98%;
+  --secondary: 240 4.8% 95.9%;
+  --secondary-foreground: 240 5.9% 10%;
+  --muted: 240 4.8% 95.9%;
+  --muted-foreground: 240 3.8% 46.1%;
+  --accent: 240 4.8% 95.9%;
+  --accent-foreground: 240 5.9% 10%;
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 0 0% 98%;
+  --border: 240 5.9% 90%;
+  --input: 240 5.9% 90%;
+  --ring: 270 95% 65%;
+  --radius: 0.75rem;
+}
+
+.dark {
+  --background: 240 10% 3.9%;
+  --foreground: 0 0% 98%;
+  --card: 240 10% 3.9%;
+  --card-foreground: 0 0% 98%;
+  --popover: 240 10% 3.9%;
+  --popover-foreground: 0 0% 98%;
+  --primary: 270 95% 65%;
+  --primary-foreground: 0 0% 98%;
+  --secondary: 240 3.7% 15.9%;
+  --secondary-foreground: 0 0% 98%;
+  --muted: 240 3.7% 15.9%;
+  --muted-foreground: 240 5% 64.9%;
+  --accent: 240 3.7% 15.9%;
+  --accent-foreground: 0 0% 98%;
+  --destructive: 0 62.8% 30.6%;
+  --destructive-foreground: 0 0% 98%;
+  --border: 240 3.7% 15.9%;
+  --input: 240 3.7% 15.9%;
+  --ring: 270 95% 65%;
+}
+
+body {
+  /* @apply bg-[#2C3039] text-white; */
+  /* @apply bg-[#4F5F5E] text-white; */
+  /* @apply bg-gradient-to-r from-[#C8C17C] to-[#C084FC] text-white; */
+  /* @apply bg-gradient-to-r from-[#a5a5a4] to-[#777776] text-white; */
+  /* @apply bg-gradient-to-r from-[#d2a9fc] to-[#C084FC] text-white; */
+  @apply bg-gradient-to-br from-gray-400 to-gray-600 text-white;
+
+  /* @apply bg-gradient-to-br from-blue-900 to-blue-700 text-white; */
+  /* @apply bg-cyan-600 text-white; */
+  /* @apply bg-teal-700 text-white; */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+@keyframes gradient-shift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animate-gradient {
+  background-size: 200% 200%;
+  animation: gradient-shift 3s ease infinite;
+}
+
+/* body {
+  @apply bg-one rubik;
+}
+body {
+  font-family: 'Rubik', sans-serif;
+} */
+
+html {
+  scroll-behavior: smooth;
+}
+
+.truncate {
+  display: inline-block;
+  direction: ltr; /* عكس اتجاه النص ليبدأ من اليمين */
+
+  white-space: nowrap; /* منع النص من الالتفاف */
+  overflow: hidden; /* إخفاء النص الزائد */
+  width: 15ch; /* عرض النص بما يعادل 5 حروف فقط */
+  text-overflow: ellipsis; /* إضافة ثلاث نقاط (...) للإشارة إلى وجود نص زائد */
+}
+
+.rubik {
+  font-family: var(' --font-rubik');
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+}
+::-webkit-scrollbar-track {
+  background-color: #ffffff;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c084fc;
+  border-radius: 20px;
+}
+
+::-webkit-scrollbar-track {
+  border-radius: 20px;
+}
+
+.keen-slider__slide {
+  border-radius: 0px;
+}
+
+.btn {
+  position: relative;
+  background: #c084fc;
+  color: #ffffff;
+  height: 100%;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.btn::before {
+  position: absolute;
+  content: '';
+  top: 0;
+  left: 0;
+  width: 0%;
+  height: 100%;
+  background: #30353b;
+
+  /* color: rgb(255, 255, 255); */
+  height: 100%;
+  z-index: -1;
+  transition: 1s;
+}
+.btn:hover::before {
+  width: 100%;
+}
+
+.video-iframe {
+  width: 100%;
+  height: 100%;
+}
+
+.video-container {
+  position: relative;
+  width: 100%;
+  height: 0;
+  padding-bottom: 56.25%;
+  /* 16:9 aspect ratio */
+  overflow: hidden;
+}
+
+.video-container.absolute {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1000;
+  background-color: #000;
+  /* Optional: background color for full-screen overlay */
+}
+
+.close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 1100;
+  cursor: pointer;
+  color: #fff;
+  font-size: 24px;
+}
+
+/*? خاصة بالتعامل مع رفع الملف الذي هو عبارة عن صورة قمنا باخفاء الاليمنت الاساسي وعمل اليمنت مخصص  */
+input[type='file'] {
+  display: none;
+}
+.custom-file-upload {
+  white-space: nowrap;
+  font-weight: bold;
+  display: inline-block;
+
+  /* background-color: aqua; */
+
+  /* padding: 100px; */
+  cursor: pointer;
+  color: white;
+  /* White text */
+  font-size: 14px;
+  text-align: center;
+  overflow: hidden;
+  z-index: 50;
+}
+.clip-arc {
+  clip-path: ellipse(97% 100% at 50% 0%);
+}
+
+/* إخفاء شريط التمرير في المتصفحات الحديثة */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  /* Internet Explorer 10+ */
+  scrollbar-width: none;
+  /* Firefox */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+  /* Safari and Chrome */
+}
+
+iframe {
+  border: 0;
+  overflow: hidden;
+}
+
+.video-poster {
+  width: 100%;
+  /* عرض الفيديو */
+  height: 176px;
+  /* ارتفاع الفيديو (44 * 4 = 176px) */
+  background-size: cover;
+  /* لضبط حجم الصورة لتغطي الفيديو بالكامل */
+  background-position: center;
+  /* لتمركز الصورة في الوسط */
+}
+
+.ad-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: auto;
+  padding: 10px;
+}
+
+@media (max-width: 768px) {
+  .ad-container {
+    padding: 5px;
+  }
+
+  .adsbyexoclick {
+    width: 100%;
+    height: auto;
+  }
+}
+
+.spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.spinner {
+  border: 8px solid #f3f3f3;
+  border-top: 8px solid #3498db;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
