@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { prisma } from '../../../lib/prisma';
+import { prisma } from '../../../../lib/prisma';
 
 // GET - جلب فيلم عربي محدد
 export async function GET(request, { params }) {
