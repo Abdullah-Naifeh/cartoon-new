@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { prisma } from '../../../../lib/prisma';
+import prisma  from '../../../../lib/prisma';
 import { withAuth, withRole } from '../../../../lib/prisma';
 
 // GET - جلب مستخدم محدد

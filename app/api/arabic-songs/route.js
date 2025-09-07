@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { prisma } from '../../../lib/prisma';
+import prisma  from '../../../lib/prisma';
 
 // GET - جلب جميع الأغاني العربية
 export async function GET(request) {

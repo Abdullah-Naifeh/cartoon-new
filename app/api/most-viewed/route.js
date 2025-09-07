@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { prisma } from '../../../lib/prisma';
+import prisma  from '../../../lib/prisma';
 
 // GET - جلب المسلسلات العربية الأعلى مشاهدة
 export async function GET(request) {

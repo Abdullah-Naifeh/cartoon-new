@@ -1,6 +1,6 @@
 import { getToken } from 'next-auth/jwt';
 import { NextResponse } from 'next/server';
-import { prisma } from '../lib/prisma';
+import prisma  from '../lib/prisma';
 
 // middleware المصادقة الأساسي
 export async function authMiddleware(request) {

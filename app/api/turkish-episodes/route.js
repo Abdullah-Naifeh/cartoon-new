@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { prisma } from '../../../lib/prisma';
+import prisma  from '../../../lib/prisma';
 import authMiddleware from '../../../lib/prisma';
 
 // GET - جلب جميع الحلقات التركية
